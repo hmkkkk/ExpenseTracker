@@ -1,1 +1,1 @@
-# ExpenseTracker
+Me and my fiancé lose track of money we spend on groceries, so I decided to make a simple web app to help us manage our budget better. App was made using .NET 7 web API and React with Vite.js template
