@@ -14,11 +14,11 @@ export const GlobalProvider = ({ children }) => {
     const [state, dispatch] = useReducer(AppReducer, initialState);
     const [loading, setLoading] = useState(null);
     const [dbLoading, setDbLoading] = useState(null);
-
+    const baseUrl = "https://localhost:5001"
 
     async function getUsersList() {
         try {
-            const res = await axios.get(`/api/Shoppers`);
+            const res = await axios.get(`${baseUrl}/api/Shoppers`);
             setDbLoading(true);
             dispatch({
                 type: 'GET_SHOPPERS',
@@ -33,10 +33,13 @@ export const GlobalProvider = ({ children }) => {
         }
     }
 
-    async function getTransactions(uid, dateFrom, dateTo) {
-        
+    async function getTransactions(uid = '', dateFrom = '', dateTo = '') {
+        let queryString = `${baseUrl}/api/Expenses?uid=${uid}`
+        if (dateFrom && dateTo) {
+            queryString += `&dateFrom=${dateFrom}&dateTo=${dateTo}`
+        }
         try {
-            const res = await axios.get(`/api/Expenses?uid=${uid}&dateFrom=${dateFrom}&dateTo=${dateTo}`);
+            const res = await axios.get(queryString);
             setDbLoading(true);
             dispatch({
                 type: 'GET_TRANSACTIONS',
@@ -53,7 +56,7 @@ export const GlobalProvider = ({ children }) => {
 
    async function deleteTransaction(id) {
         try {
-            await axios.delete(`api/Expenses/${id}`);
+            await axios.delete(`${baseUrl}/api/Expenses/${id}`);
 
             dispatch({
                 type: 'DELETE_TRANSACTION',
@@ -75,7 +78,7 @@ export const GlobalProvider = ({ children }) => {
             }
         }
         try {
-            const res = await axios.put('/api/Expenses', transaction, config)
+            const res = await axios.put(`${baseUrl}/api/Expenses`, transaction, config)
             dispatch({
                 type: 'EDIT_TRANSACTION',
                 payload: res.data
@@ -96,7 +99,7 @@ export const GlobalProvider = ({ children }) => {
             }
         }
         try {
-            const res = await axios.post('/api/Expenses', transaction, config)
+            const res = await axios.post(`${baseUrl}/api/Expenses`, transaction, config)
             dispatch({
                 type: 'ADD_TRANSACTION',
                 payload: res.data
