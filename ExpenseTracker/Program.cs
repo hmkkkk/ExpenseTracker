@@ -23,6 +23,8 @@ builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
 
 var app = builder.Build();
 
+app.UseCors(x => x.AllowAnyHeader().AllowAnyMethod().WithOrigins("https://127.0.0.1:5173"));
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
