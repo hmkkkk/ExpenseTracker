@@ -32,6 +32,8 @@ namespace ExpenseTracker.Controllers
                 : await _repo.GetAllAsync(x => x.Date.Date >= query.DateFrom.Date && x.Date.Date <= query.DateTo.Date && x.ShopperId == query.Uid, 
                     cancellationToken, x => x.Shopper);
 
+            expenses = expenses.OrderByDescending(x => x.Date).ToList();
+
             var expensesMapped = _mapper.Map<List<ExpenseDto>>(expenses);
 
             return Ok(expensesMapped);
@@ -43,6 +45,8 @@ namespace ExpenseTracker.Controllers
             if (form == null) return BadRequest();
 
             if (!ModelState.IsValid) return BadRequest();
+
+            if (form.Amount <= 0) return BadRequest("Kwota musi być dodatnia");
 
             var expenseToDb = _mapper.Map<Expense>(form);
 

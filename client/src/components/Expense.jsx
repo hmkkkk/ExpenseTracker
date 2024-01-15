@@ -11,7 +11,7 @@ const Transaction = ({transaction}) => {
     library.add(faTrash);
 
         return (
-            <li>
+            <li className='transaction-li' style={{borderColor: transaction.shopper.color}}>
                 <label className="transaction-card-title">{transaction.title}</label>
                 <label>
                     {Math.abs(transaction.amount).toFixed(2)} PLN

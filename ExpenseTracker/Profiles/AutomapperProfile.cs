@@ -9,9 +9,7 @@ namespace ExpenseTracker.Profiles
     {
         public AutomapperProfile()
         {
-            CreateMap<Expense, ExpenseDto>().ForMember(
-                dest => dest.ShopperName,
-                opt => opt.MapFrom(src => src.Shopper.Name));
+            CreateMap<Expense, ExpenseDto>();
             CreateMap<EditExpenseForm, Expense>();
             CreateMap<AddExpenseForm, Expense>();
 

@@ -34,6 +34,34 @@ h3 {
   margin: 40px 0 10px;
 }
 
+h4 {
+  margin: 0;
+}
+
+.transaction-li {
+  border-left: 5px solid #dedede;
+}
+
+.colored-bullet-list {
+  list-style: none;
+  padding: 0;
+}
+
+.colored-bullet-list li {
+  margin: 0 0 5px 0;
+  display: flex;
+  justify-content: flex-start;
+  align-content: center;
+  position: relative;
+}
+
+.bullet-point {
+  content: "\2022";
+  font-weight: bold;
+  margin: 0px 10px; 
+}
+
+
 .app-card {
   background-color: #efd7f7;
   box-shadow: var(--box-shadow-app);
