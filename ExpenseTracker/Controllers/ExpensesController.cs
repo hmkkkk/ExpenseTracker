@@ -11,12 +11,14 @@ namespace ExpenseTracker.Controllers
     [Route("api/[controller]")]
     public class ExpensesController : Controller
     {
-        private readonly IBaseRepository<Expense> _repo;
+        private readonly IBaseRepository<Shopper> _shopperRepo;
+        private readonly IBaseRepository<Expense> _expenseRepo;
         private readonly IMapper _mapper;
 
-        public ExpensesController(IBaseRepository<Expense> repo, IMapper mapper)
+        public ExpensesController(IBaseRepository<Expense> expenseRepo, IBaseRepository<Shopper> shopper, IMapper mapper)
         {
-            _repo = repo;
+            _shopperRepo = shopper;
+            _expenseRepo = expenseRepo;
             _mapper = mapper;
         }
 
@@ -28,8 +30,8 @@ namespace ExpenseTracker.Controllers
             if (query == null) query = new GetExpensesQuery();
 
             expenses = query.Uid is null
-                ? await _repo.GetAllAsync(x => x.Date.Date >= query.DateFrom.Date && x.Date.Date <= query.DateTo.Date, cancellationToken, x => x.Shopper)
-                : await _repo.GetAllAsync(x => x.Date.Date >= query.DateFrom.Date && x.Date.Date <= query.DateTo.Date && x.ShopperId == query.Uid, 
+                ? await _expenseRepo.GetAllAsync(x => x.Date.Date >= query.DateFrom.Date && x.Date.Date <= query.DateTo.Date, cancellationToken, x => x.Shopper)
+                : await _expenseRepo.GetAllAsync(x => x.Date.Date >= query.DateFrom.Date && x.Date.Date <= query.DateTo.Date && x.ShopperId == query.Uid, 
                     cancellationToken, x => x.Shopper);
 
             expenses = expenses.OrderByDescending(x => x.Date).ToList();
@@ -50,10 +52,12 @@ namespace ExpenseTracker.Controllers
 
             var expenseToDb = _mapper.Map<Expense>(form);
 
-            _repo.Add(expenseToDb);
-            var result = await _repo.CommitAsync(cancellationToken);
+            _expenseRepo.Add(expenseToDb);
+            var result = await _expenseRepo.CommitAsync(cancellationToken);
 
             if (!result) return BadRequest();
+
+            expenseToDb.Shopper = await _shopperRepo.GetByIdAsync(expenseToDb.ShopperId, cancellationToken);
 
             var expenseMapped = _mapper.Map<ExpenseDto>(expenseToDb);
 
@@ -67,14 +71,14 @@ namespace ExpenseTracker.Controllers
 
             if (!ModelState.IsValid) return BadRequest();
 
-            var expenseFromDb = await _repo.GetByIdAsync(form.Id, cancellationToken, x => x.Shopper);
+            var expenseFromDb = await _expenseRepo.GetByIdAsync(form.Id, cancellationToken, x => x.Shopper);
 
             if (expenseFromDb == null) return NotFound();
 
             _mapper.Map(form, expenseFromDb);
 
-            _repo.Update(expenseFromDb);
-            var result = await _repo.CommitAsync(cancellationToken);
+            _expenseRepo.Update(expenseFromDb);
+            var result = await _expenseRepo.CommitAsync(cancellationToken);
 
             if (!result) return BadRequest();
 
@@ -86,7 +90,7 @@ namespace ExpenseTracker.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<ExpenseDto>> GetExpenseById(int id, CancellationToken cancellationToken)
         {
-            var expenseFromDb = await _repo.GetByIdAsync(id, cancellationToken, x => x.Shopper);
+            var expenseFromDb = await _expenseRepo.GetByIdAsync(id, cancellationToken, x => x.Shopper);
 
             if (expenseFromDb == null) return NotFound();
 
@@ -98,12 +102,12 @@ namespace ExpenseTracker.Controllers
         [HttpDelete("{id}")]
         public async Task<ActionResult> DeleteExpense(int id, CancellationToken cancellationToken)
         {
-            var expenseFromDb = await _repo.GetByIdAsync(id, cancellationToken);
+            var expenseFromDb = await _expenseRepo.GetByIdAsync(id, cancellationToken);
 
             if (expenseFromDb == null) return NotFound();
 
-            _repo.Delete(expenseFromDb);
-            var result = await _repo.CommitAsync(cancellationToken);
+            _expenseRepo.Delete(expenseFromDb);
+            var result = await _expenseRepo.CommitAsync(cancellationToken);
 
             if (!result) return BadRequest();
             return NoContent();

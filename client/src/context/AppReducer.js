@@ -24,7 +24,7 @@ export default (state, action) => {
             return {
                 ...state,
                 loading: false,
-                transactions: [...state.transactions, action.payload]
+                transactions: [action.payload, ...state.transactions]
             }
         case 'GET_SHOPPERS':
             return {
