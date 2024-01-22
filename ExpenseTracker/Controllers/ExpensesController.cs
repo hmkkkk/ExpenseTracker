@@ -29,7 +29,7 @@ namespace ExpenseTracker.Controllers
 
             if (query == null) query = new GetExpensesQuery();
 
-            expenses = query.Uid is null
+            expenses = query.Uid == 0
                 ? await _expenseRepo.GetAllAsync(x => x.Date.Date >= query.DateFrom.Date && x.Date.Date <= query.DateTo.Date, cancellationToken, x => x.Shopper)
                 : await _expenseRepo.GetAllAsync(x => x.Date.Date >= query.DateFrom.Date && x.Date.Date <= query.DateTo.Date && x.ShopperId == query.Uid, 
                     cancellationToken, x => x.Shopper);
