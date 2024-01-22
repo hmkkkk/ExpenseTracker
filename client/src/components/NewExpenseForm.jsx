@@ -1,11 +1,12 @@
 import { useState, useEffect, useContext } from "react"
 import { GlobalContext } from "../context/GlobalState";
+import { formatDateForInput } from "../Helpers/DateHelpers"
 import SelectOption from "./SelectOption"
 
 const NewExpenseForm = () => {
     const [title, setTitle] = useState('')
     const [amount, setAmount] = useState(0)
-    const [date, setDate] = useState(new Date())
+    const [date, setDate] = useState(formatDateForInput(new Date()))
     const [shopperId, setShopperId] = useState(1)
     const [formVisible, setFormVisible] = useState(false)
 

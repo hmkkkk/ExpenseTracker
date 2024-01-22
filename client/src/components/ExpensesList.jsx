@@ -1,5 +1,6 @@
 import Expense from "./Expense";
 import BulletPoint from "./BulletPoint";
+import ExpensesListFilters from "./ExpensesListFilters";
 import { useContext, useEffect } from "react";
 import { GlobalContext } from "../context/GlobalState";
 
@@ -22,6 +23,7 @@ const ExpensesList = () => {
     return (
         <>
             <h3 className="border-bottom">Historia</h3>
+            <ExpensesListFilters />
             <h4>Legenda</h4>
             <ul className="colored-bullet-list">
                 {shoppers.map(shopper => (<BulletPoint key={shopper.id} shopper={shopper} />))}
