@@ -1,14 +1,13 @@
 import { useContext } from 'react'
 import { GlobalContext } from '../context/GlobalState'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { library } from "@fortawesome/fontawesome-svg-core";
-import { faTrash } from "@fortawesome/free-solid-svg-icons";
+import { faTrash, faPen } from "@fortawesome/free-solid-svg-icons";
 
 
-const Transaction = ({transaction}) => {
+const Transaction = ({transaction, displayModal}) => {
 
     const { deleteTransaction } = useContext(GlobalContext);
-    library.add(faTrash);
+
 
         return (
             <li className='transaction-li' style={{borderColor: transaction.shopper.color}}>
@@ -16,7 +15,10 @@ const Transaction = ({transaction}) => {
                 <label>
                     {Math.abs(transaction.amount).toFixed(2)} PLN
                 </label>
-                <button onClick={() => deleteTransaction(transaction.id)} className="delete-btn">
+                <button onClick={() => displayModal(transaction.id)} className="fontawesome-btn padding-x edit-btn">
+                    <FontAwesomeIcon icon={faPen} size='xs' />
+                </button>
+                <button onClick={() => deleteTransaction(transaction.id)} className="delete-btn fontawesome-btn">
                     <FontAwesomeIcon icon={faTrash} size='xs' />
                 </button>
             </li>

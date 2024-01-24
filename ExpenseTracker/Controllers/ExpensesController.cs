@@ -82,6 +82,8 @@ namespace ExpenseTracker.Controllers
 
             if (!result) return BadRequest();
 
+            expenseFromDb.Shopper = await _shopperRepo.GetByIdAsync(expenseFromDb.ShopperId, cancellationToken);
+
             var expenseMapped = _mapper.Map<ExpenseDto>(expenseFromDb);
 
             return Ok(expenseMapped);

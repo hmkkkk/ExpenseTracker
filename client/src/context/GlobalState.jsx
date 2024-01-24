@@ -6,6 +6,7 @@ const initialState = {
     transactions: [],
     shoppers: [],
     error: null,
+    editTransaction: null
 }
 
 export const GlobalContext = createContext(initialState);
@@ -113,6 +114,12 @@ export const GlobalProvider = ({ children }) => {
         
     }
 
+    async function getTransaction(id) {
+        const res = await axios.get(`${baseUrl}/api/Expenses/${id}`)
+
+        return res.data
+    }
+
     return (<GlobalContext.Provider value={{
         transactions: state.transactions,
         shoppers: state.shoppers,
@@ -125,7 +132,8 @@ export const GlobalProvider = ({ children }) => {
         editTransaction,
         addTransaction,
         getUsersList,
-        setLoading
+        setLoading,
+        getTransaction
     }}>
         {children}
     </GlobalContext.Provider>);

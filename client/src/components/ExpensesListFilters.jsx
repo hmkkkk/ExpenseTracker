@@ -1,12 +1,12 @@
 import { useState, useEffect, useContext } from "react"
 import { GlobalContext } from "../context/GlobalState";
-import { formatDateForInput } from "../Helpers/DateHelpers"
+import { formatDateForInputFromDate } from "../Helpers/DateHelpers"
 import SelectOption from "./SelectOption"
 
 const ExpensesListFilters = () => {
     const { shoppers, getTransactions, getUsersList } = useContext(GlobalContext);
-    const [dateFrom, setDateFrom] = useState(formatDateForInput(new Date()))
-    const [dateTo, setDateTo] = useState(formatDateForInput(new Date()))
+    const [dateFrom, setDateFrom] = useState(formatDateForInputFromDate(new Date()))
+    const [dateTo, setDateTo] = useState(formatDateForInputFromDate(new Date()))
     const [shopperId, setShopperId] = useState(0)
     
     useEffect(() => {
@@ -15,7 +15,7 @@ const ExpensesListFilters = () => {
         const currentDate = new Date();
         const newDate = new Date(currentDate);
         newDate.setDate(currentDate.getDate() - 30);
-        setDateFrom(formatDateForInput(newDate));
+        setDateFrom(formatDateForInputFromDate(newDate));
     }, []);
 
     const submitForm = e => {
