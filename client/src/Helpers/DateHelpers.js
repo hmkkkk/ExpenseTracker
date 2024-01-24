@@ -1,4 +1,4 @@
-const formatDateForInput = (date) => {
+const formatDateForInputFromDate = (date) => {
     return date.getFullYear().toString() +
     "-" +
     (date.getMonth() + 1).toString().padStart(2, 0) +
@@ -6,4 +6,12 @@ const formatDateForInput = (date) => {
     date.getDate().toString().padStart(2, 0)
 }
 
-export {formatDateForInput}
+const formatDateForInputFromApi = (dateString) => {
+    if (!dateString) return
+
+    const index = dateString.indexOf('T');
+    return dateString.substring(0, index)
+}
+
+
+export {formatDateForInputFromDate, formatDateForInputFromApi}
