@@ -1,6 +1,7 @@
 import { useState, useEffect, useContext } from "react"
 import { GlobalContext } from "../context/GlobalState";
 import { formatDateForInputFromApi, formatDateForInputFromDate } from "../Helpers/DateHelpers"
+import { toast } from "react-toastify";
 import SelectOption from "./SelectOption"
 
 const EditExpenseModalForm = ({transaction, modalVisible, setModalVisible}) => {
@@ -31,7 +32,13 @@ const EditExpenseModalForm = ({transaction, modalVisible, setModalVisible}) => {
             id: transaction.id
         }
 
-        editTransaction(formData)
+        toast.promise(
+            editTransaction(formData),
+            {
+              pending: 'Wysyłanie zmian',
+              success: 'Zapisano!',
+              error: 'Nie udało się edytować'
+            })
         setModalVisible(false)
     }
 

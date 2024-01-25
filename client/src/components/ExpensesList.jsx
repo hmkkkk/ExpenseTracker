@@ -26,7 +26,9 @@ const ExpensesList = () => {
         return (
             <>
                 <h3 className="border-bottom">Historia</h3>
-                <h4>Loading...</h4>
+                <div className="flex justify-center">
+                    <div className="loader"></div> 
+                </div>
             </>)
     }
         

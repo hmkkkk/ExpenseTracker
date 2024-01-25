@@ -1,6 +1,7 @@
 import { useState, useEffect, useContext } from "react"
 import { GlobalContext } from "../context/GlobalState";
 import { formatDateForInputFromDate } from "../Helpers/DateHelpers"
+import { toast } from "react-toastify";
 import SelectOption from "./SelectOption"
 
 const NewExpenseForm = () => {
@@ -24,11 +25,18 @@ const NewExpenseForm = () => {
             amount, title, date, shopperId
         }
 
-        addTransaction(formData)
+        toast.promise(
+            addTransaction(formData),
+            {
+              pending: 'Wysyłanie zmian',
+              success: 'Zapisano nową wpłatę!',
+              error: 'Nie udało się dodać wpłaty'
+            })
+        
         
         setTitle('')
         setAmount(0)
-        setDate(new Date())
+        setDate(formatDateForInputFromDate(new Date()))
         setShopperId(1)
         setFormVisible(false)
     }
