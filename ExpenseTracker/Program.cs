@@ -1,6 +1,7 @@
 using ExpenseTracker.Data;
 using ExpenseTracker.Data.Interfaces;
 using ExpenseTracker.Data.Repositories;
+using ExpenseTracker.Helpers;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
 
@@ -12,10 +13,17 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+var connectionString = "";
+
+if (builder.Environment.IsDevelopment()) 
+    connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+else 
+    connectionString = StringHelpers.BuildPostgresConnectionString(Environment.GetEnvironmentVariable("DATABASE_URL"));
+
 builder.Services.AddDbContext<DataContext>(opt =>
 {
-    var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-    opt.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
+    opt.UseNpgsql(connectionString);
 });
 
 builder.Services.AddScoped(typeof(IBaseRepository<>), typeof(BaseRepository<>));
@@ -36,6 +44,24 @@ app.UseHttpsRedirection();
 
 app.UseAuthorization();
 
+app.UseDefaultFiles();
+app.UseStaticFiles();
+
 app.MapControllers();
+app.MapFallbackToController("Index", "Fallback");
+
+using var scope = app.Services.CreateScope();
+var services = scope.ServiceProvider;
+try
+{
+    var context = services.GetRequiredService<DataContext>();
+    await context.Database.MigrateAsync();
+    await Seed.SeedUsers(context);
+}
+catch (Exception ex)
+{
+    var logger = services.GetService<ILogger<Program>>();
+    logger.LogError(ex, "an error occured during migration");
+}
 
 app.Run();

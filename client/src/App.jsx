@@ -10,7 +10,7 @@ function App() {
     <>
       <GlobalProvider>
         <div className='app-card'>
-          <h1 className='text-center'>😭🌸Nasze wydatki🌸😭</h1>
+          <h1 className='text-center'>Nasze wydatki😭</h1>
           <div className='container'>
             <NewExpenseForm />
             <ExpensesList />
